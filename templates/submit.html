@@ -1,0 +1,91 @@
+{% include 'layout.html' %}
+
+{% block content %}
+
+<div class="container text-light">
+    <div class="row">
+        <div class="col">
+            <div class="jumbotron jumbotron-fluid pt-4 pb-2 mb-1" style="background:transparent; text-align: center;">
+                <!-- 
+                    <h2 class="font-weight-bold" style="text-align: center;">Urban Picture of the Day</h2>
+                </a> -->
+                <div class="container" style="">
+                    <a href="{{ url_for('home') }}" class="titre-logo text-light"><img
+                            src="{{ url_for('static', filename='images/logo2.png') }}" alt=""></a>
+                </div>
+                <h4 class="mt-4" style="text-align: center;">
+                    Send your picture to NPOD !
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container container-fluid text-light" style="width: 40%;">
+    <div class="row" style="text-align: justify;">
+        <div class="col-sm">
+            <p class="lead">DISCLAIMER : I release this image into the public domain with the understanding will
+                credit me as the creator. I'm the only owner of this image and all refers to my copyright. I authorize
+                UPOD to eventually publish my image on this website and our social page on <a href="#">Facebook</a>.
+
+                UPOD is a NON-PROFIT site that is self-sustaining with the help of volunteers around the world.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container container-fluid" style="width: 40%;">
+    <form>
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col">
+                    <label for="firstname" class="text-light">First Name</label>
+                    <input type="text" class="form-control" id="firstname" aria-describedby="emailHelp" placeholder="">
+                </div>
+                <div class="col">
+                    <label for="lastname" class="text-light">Last Name</label>
+                    <input type="text" class="form-control" id="lastname" aria-describedby="emailHelp" placeholder="">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1" class="text-light">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                placeholder="ex: myname@example.com">
+            <small id="emailHelp" class="form-text text-muted">We'll not share your email with anyone
+                else.</small>
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1" class="text-light">Website</label>
+            <input type="link" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                placeholder="ex: http://www.mywebsite.com">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1" class="text-light">Picture title</label>
+            <input type="link" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1" class="text-light">Description and technical data</label>
+            <textarea class="form-control" rows="5" id="comment"
+                placeholder="Location, equipment, techniques..."></textarea>
+            <small id="emailHelp" class="form-text text-muted">Maximum: 1000 characters</small>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlFile1" class="text-light">Import your picture</label>
+            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+            <small id="emailHelp" class="form-text text-muted">Max. size: 20MB</small>
+        </div>
+        <div class="form-check" style="text-align: center;">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label text-light" for="exampleCheck1">I agree with <a href="#">Terms and
+                    Conditions</a></label>
+        </div>
+        <div class="row mt-2 mb-5">
+            <div class="col" style="text-align: center;">
+                <button type="submit" class="btn btn-success btn-lg mt-3" style="width: 50%;">Submit your
+                    image</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

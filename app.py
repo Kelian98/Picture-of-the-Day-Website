@@ -10,5 +10,10 @@ def home():
     return render_template('home.html', d2=d2)
 
 
+@app.route("/submit")
+def submit():
+    return render_template('submit.html')
+
+
 if __name__ == "__main__":
     app.run(debug=True)

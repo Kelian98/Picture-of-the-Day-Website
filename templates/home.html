@@ -1,98 +1,78 @@
-<!doctype html>
-<html lang="en">
+{% include 'layout.html' %}
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% block content %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <title>Nature Picture of the Day</title>
-</head>
-
-<body style="background-color:#141414;">
-
-    <div class="container text-light">
-        <div class="row">
-            <div class="col">
-                <div class="jumbotron jumbotron-fluid pt-4 pb-2 mb-1" style="background:transparent;">
-                    <h2 style="text-align: center;">Nature Picture of the Day</h2>
-                    <p class="lead" style="text-align: center;">Discover our planet Earth! Each day a
-                        different image or
-                        photograph of our
-                        fascinating planet is
-                        featured, along with a brief explanation written by a professional photographer. </p>
+<div class="container text-light">
+    <div class="row">
+        <div class="col">
+            <div class="jumbotron jumbotron-fluid pt-4 pb-2 mb-1" style="background:transparent; text-align: center;">
+                <!-- 
+                    <h2 class="font-weight-bold" style="text-align: center;">Urban Picture of the Day</h2>
+                </a> -->
+                <div class="container" style="">
+                    <a href="{{ url_for('home') }}" class="titre-logo text-light"><img
+                            src="{{ url_for('static', filename='images/logo2.png') }}" alt=""></a>
                 </div>
-            </div>
-        </div>
-        <div class="row pt-1 mb-2">
-            <div class="col">
-                <h5 style="text-align: center;">{{ d2 }}</h5>
-            </div>
-        </div>
-    </div>
 
-    <div class="container mb-4">
-        <img src="{{ url_for('static', filename='images/HeartNebula_Falls_2378.jpg') }}" class="img-fluid"
-            alt="Responsive image">
-    </div>
-
-    <div class="container text-light">
-        <div class="row">
-            <div class="col">
-                <h4 style="text-align: center;">IC 1805: The Heart Nebula </h4>
-                <h5 style="text-align: center;">Image Credit & Copyright: <a href="#"> Bray Falls</a></h5>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p class="lead pt-1" style="text-align: justify; font-size: 1.2em;"> Explanation: What energizes the
-                    Heart
-                    Nebula? First, the
-                    large emission nebula dubbed
-                    IC 1805 looks, in whole, like a human heart. The nebula glows brightly in red light emitted by its
-                    most prominent element: hydrogen. The red glow and the larger shape are all powered by a small group
-                    of stars near the nebula's center. In the center of the Heart Nebula are young stars from the open
-                    star cluster Melotte 15 that are eroding away several picturesque dust pillars with their energetic
-                    light and winds. The open cluster of stars contains a few bright stars nearly 50 times the mass of
-                    our Sun, many dim stars only a fraction of the mass of our Sun, and an absent microquasar that was
-                    expelled millions of years ago. The Heart Nebula is located about 7,500 light years away toward the
-                    constellation of Cassiopeia. Coincidentally, a small meteor was captured in the foreground during
-                    imaging and is visible above the dust pillars. At the top right is the companion Fishhead Nebula.
-
+                <p class="lead pt-2" style="text-align: center;">
+                    Discover our most beautiful cities ! Each day a different image or
+                    photograph of our fascinating cities is featured, along with a
+                    brief explanation written by a professional photographer.
                 </p>
             </div>
         </div>
-        <div class="row">
-            <div class="col" style="text-align: center;">
-                <!-- <div class="btn btn-info btn-large" style="text-align: center;">
-                </div> -->
-                <button type="button" class="btn btn-info btn-lg">Click here to submit your picture !</button>
-            </div>
+    </div>
+    <div class="row pt-1 mb-2">
+        <div class="col">
+            <h5 style="text-align: center;">{{ d2 }}</h5>
         </div>
     </div>
+</div>
 
-    div
+<div class="container mb-4">
+    <img src="{{ url_for('static', filename='images/featured.jpg') }}" class="img-fluid" alt="Responsive image" />
+</div>
 
-    <footer style="text-align: center; bottom: 0;">
-        <p>&copy; Copyright 2019-2020<br> All Rights Reserved by <a href="https://github.com/Kelian98">
-                Kelian98</a></p>
-    </footer>
+<div class="container text-light">
+    <div class="row">
+        <div class="col">
+            <h4 style="text-align: center;">The New York City Skyline</h4>
+            <h5 style="text-align: center;">
+                Image Credit & Copyright: <a href="#">John Doe</a>
+            </h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p class="lead pt-1" style="text-align: justify; font-size: 1.2em;">
+                Morbi semper neque bibendum metus tincidunt, in cursus neque semper.
+                Aenean tincidunt urna tristique lectus semper, non interdum dolor
+                aliquam. Ut suscipit interdum porta. Nam euismod sapien ut magna
+                placerat suscipit ac vel ipsum. Vestibulum neque est, ultricies
+                vitae arcu quis, vestibulum varius turpis. Nam rhoncus sed leo non
+                interdum. Praesent feugiat ante libero, nec ultricies risus
+                porttitor ut. Praesent vel orci sem. Pellentesque tortor sem,
+                hendrerit vitae nisi consectetur, accumsan vehicula mauris.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col pt-2" style="text-align: center;">
+            <a href="{{ url_for('submit') }}">
+                <button type="button" class="btn btn-success btn-lg">
+                    Click here to submit your picture !
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
-</body>
+<footer style="text-align: center; bottom: 0; margin-top: 40px;">
+    <p style="color: #646464;">
+        &copy; Copyright 2019-2020<br />
+        All Rights Reserved by
+        <a href="https://github.com/Kelian98"> Kelian98</a>
+    </p>
+</footer>
 
-</html>
+{% endblock %}

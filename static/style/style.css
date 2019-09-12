@@ -1,0 +1,12 @@
+body {
+    font-family: 'Catamaran', sans-serif;
+    background-color: black;
+}
+
+.titre-logo {
+    text-decoration: none;
+}
+
+.titre-logo:hover {
+    text-decoration: none;
+}
