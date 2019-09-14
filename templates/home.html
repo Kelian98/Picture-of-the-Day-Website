@@ -6,9 +6,6 @@
     <div class="row">
         <div class="col">
             <div class="jumbotron jumbotron-fluid pt-4 pb-2 mb-1" style="background:transparent; text-align: center;">
-                <!-- 
-                    <h2 class="font-weight-bold" style="text-align: center;">Urban Picture of the Day</h2>
-                </a> -->
                 <div class="container" style="">
                     <a href="{{ url_for('home') }}" class="titre-logo text-light"><img
                             src="{{ url_for('static', filename='images/logo2.png') }}" alt=""></a>
@@ -58,7 +55,7 @@
     </div>
     <div class="row">
         <div class="col pt-2" style="text-align: center;">
-            <a href="{{ url_for('submit') }}">
+            <a href="{{ url_for('home') }}">
                 <button type="button" class="btn btn-success btn-lg">
                     Click here to submit your picture !
                 </button>
