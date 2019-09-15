@@ -1,92 +1,83 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
-from datetime import date
-
-from random import randint
-from time import strftime
-from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField, FileField
-
-import urllib.request
 from werkzeug.utils import secure_filename
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from flask_wtf import FlaskForm
+from wtforms import TextField, TextAreaField, validators, StringField, SubmitField
+from wtforms.validators import DataRequired
+from datetime import date, datetime
+from time import strftime
 import os
+import json
 
 # App config.
 DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+app.config['SECRET_KEY'] = '7d441f27d443f27567d441f2b6176a'
 
 # Image upload config
-UPLOAD_FOLDER = 'C:/Users/kelia/Picture-of-the-Day-Website/static/images'
+UPLOAD_FOLDER = 'C:/Users/kelia/Picture-of-the-Day-Website/static/images/upload'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-app.config['MAX_CONTENT_LENGTH'] = 16 * 6000 * 4000
+app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-class ReusableForm(Form):
-    firstname = TextField('Firstname', validators=[validators.required()])
-    lastname = TextField('Lastname', validators=[validators.required()])
-    email = TextField('Email', validators=[validators.required()])
-    website = TextField('Website', validators=[validators.required()])
+class PhotoForm(FlaskForm):
+    firstname = TextField('Firstname', validators=[DataRequired()])
+    lastname = TextField('Lastname', validators=[DataRequired()])
+    email = TextField('Email', validators=[DataRequired()])
+    website = TextField('Website', validators=[DataRequired()])
     picture_title = TextField('Picture title', validators=[
-                              validators.required()])
+                              DataRequired()])
     description = TextAreaField('Description and data', validators=[
-                                validators.required()])
+                                DataRequired()])
+    photo = FileField('image', validators=[FileRequired(), FileAllowed(
+        ['jpg', 'png', 'jpeg', 'tiff'], 'Images only!')])
     submit = SubmitField('Send your picture')
 
 
-def get_time():
-    time = strftime("%Y-%m-%dT%H:%M")
-    return time
-
-
-def write_to_disk(name, surname, email):
-    data = open('file.log', 'a')
-    timestamp = get_time()
-    data.write('DateStamp={}, Name={}, Surname={}, Email={} \n'.format(
-        timestamp, name, surname, email))
-    data.close()
-
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-@app.route("/index", methods=['GET', 'POST'])
-def hello():
-    form = ReusableForm(request.form)
-
+@app.route('/submit', methods=['GET', 'POST'])
+def submit():
+    form = PhotoForm()
     if request.method == 'POST':
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        email = request.form['email']
-        website = request.form['website']
-        picture_title = request.form['picture_title']
-        description = request.form['description']
 
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No file selected for uploading')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            flash('File successfully uploaded')
-            return redirect('/')
+        if form.validate_on_submit():
+
+            firstname = request.form['firstname']
+            lastname = request.form['lastname']
+            email = request.form['email']
+            website = request.form['website']
+            picture_title = request.form['picture_title']
+            description = request.form['description']
+
+            f = form.photo.data
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(UPLOAD_FOLDER, filename))
+
+            now = datetime.now()
+            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+            data_dict = {
+                'date': dt_string,
+                'firstname': firstname,
+                'lastname': lastname,
+                'email': email,
+                'website': website,
+                'picture_title': picture_title,
+                'description': description,
+                'filename': filename
+            }
+
+            with open('data.json', 'a') as jsonfile:
+                json.dump(data_dict, jsonfile)
+
+            flash('Your picture has been sent successfully!', 'success')
+            return redirect(url_for('submit'))
         else:
-            flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
-            return redirect(request.url)
+            flash(
+                'Invalid format file. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
 
-        if form.validate():
-            write_to_disk(firstname, lastname, email)
-            flash('Hello: {} {}'.format(firstname, lastname))
-
-        else:
-            flash('Error: All Fields are Required')
-
-    return render_template('index.html', form=form)
+    return render_template('submit.html', form=form)
 
 
 @app.route("/")
@@ -94,11 +85,6 @@ def home():
     today = date.today()
     d2 = today.strftime("%B %d, %Y")
     return render_template('home.html', d2=d2)
-
-
-@app.route("/submit2")
-def submit2():
-    return render_template('submit2.html')
 
 
 if __name__ == "__main__":

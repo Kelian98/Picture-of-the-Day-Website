@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="">
 
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link rel="icon" href="{{ url_for('static', filename='images/logo2.ico') }}" />
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -13,22 +15,59 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/style.css') }}" />
 
     <link href="https://fonts.googleapis.com/css?family=Catamaran&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap" rel="stylesheet">
 
-    <title>Nature Picture of the Day</title>
+    <title>{% block title %}{% endblock %} - Urban Picture of the Day</title>
 </head>
 
-<body>
-    {% with messages = get_flashed_messages() %}
+<body style="background-image: url('static/images/background_80.jpg');    background-position: center; ">
+
+    <div class="container text-light">
+        <div class="row">
+            <div class="col">
+                <div class="jumbotron jumbotron-fluid pt-4 pb-2 mb-1"
+                    style="background:transparent; text-align: center;">
+                    <div class="row" style="text-align: center; margin-bottom: -20px;">
+                        <div class="col">
+                            <a href="{{ url_for('home') }}" class="titre-logo text-light">
+                                <h1 style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size: 10.2em;"
+                                    alt="" class="mb-0 pb-0">UPOD
+                                </h1>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row" style="text-align: center;">
+                        <div class="col">
+                            <h3 class="mt-0 pt-0 font-weight-bold" style="font-family: 'Roboto Slab', serif;">Urban
+                                Picture of the Day</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
     {% endif %}
     {% endwith %}
 
-    {% block content %}
+    {% block content %}{% endblock %}
+
+    {% block footer %}
+    <footer id="footer-custom" style="text-align: center; bottom: 0;">
+        <p style="color: #646464;">
+            &copy; Copyright 2019-2020<br />
+            All Rights Reserved by
+            <a href="https://github.com/Kelian98"> Kelian98</a>
+        </p>
+    </footer>
     {% endblock %}
 
     <!-- Optional JavaScript -->

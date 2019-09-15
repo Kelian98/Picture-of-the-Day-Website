@@ -1,6 +1,10 @@
 body {
+    /* font-family: 'Catamaran', sans-serif; */
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+#footer-custom {
     font-family: 'Catamaran', sans-serif;
-    background-color: black;
 }
 
 .titre-logo {
@@ -9,4 +13,8 @@ body {
 
 .titre-logo:hover {
     text-decoration: none;
+}
+
+.transparent {
+    background: rgba(255, 255, 255, 0.5);
 }

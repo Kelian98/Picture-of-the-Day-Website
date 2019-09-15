@@ -1,30 +1,23 @@
-{% include 'layout.html' %}
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
 
 {% block content %}
 
 <div class="container text-light">
-    <div class="row">
-        <div class="col">
-            <div class="jumbotron jumbotron-fluid pt-4 pb-2 mb-1" style="background:transparent; text-align: center;">
-                <div class="container" style="">
-                    <a href="{{ url_for('home') }}" class="titre-logo text-light"><img
-                            src="{{ url_for('static', filename='images/logo2.png') }}" alt=""></a>
-                </div>
+    <p class="lead pt-2" style="text-align: center;">
+        Discover our most beautiful cities ! Each day a different image or
+        photograph of our fascinating cities is featured, along with a
+        brief explanation written by a professional photographer.
+    </p>
 
-                <p class="lead pt-2" style="text-align: center;">
-                    Discover our most beautiful cities ! Each day a different image or
-                    photograph of our fascinating cities is featured, along with a
-                    brief explanation written by a professional photographer.
-                </p>
-            </div>
-        </div>
-    </div>
     <div class="row pt-1 mb-2">
         <div class="col">
             <h5 style="text-align: center;">{{ d2 }}</h5>
         </div>
     </div>
 </div>
+
 
 <div class="container mb-4">
     <img src="{{ url_for('static', filename='images/featured.jpg') }}" class="img-fluid" alt="Responsive image" />
@@ -33,7 +26,7 @@
 <div class="container text-light">
     <div class="row">
         <div class="col">
-            <h4 style="text-align: center;">The New York City Skyline</h4>
+            <h4 class="font-weight-bold" style="text-align: center;">The New York City Skyline</h4>
             <h5 style="text-align: center;">
                 Image Credit & Copyright: <a href="#">John Doe</a>
             </h5>
@@ -53,23 +46,15 @@
             </p>
         </div>
     </div>
-    <div class="row">
-        <div class="col pt-2" style="text-align: center;">
-            <a href="{{ url_for('home') }}">
-                <button type="button" class="btn btn-success btn-lg">
+    <div class="row mb-5">
+        <div class="col pt-3" style="text-align: center;">
+            <a href="{{ url_for('submit') }}">
+                <button type="button" class="btn btn-success btn-lg font-weight-bold">
                     Click here to submit your picture !
                 </button>
             </a>
         </div>
     </div>
 </div>
-
-<footer style="text-align: center; bottom: 0; margin-top: 40px;">
-    <p style="color: #646464;">
-        &copy; Copyright 2019-2020<br />
-        All Rights Reserved by
-        <a href="https://github.com/Kelian98"> Kelian98</a>
-    </p>
-</footer>
 
 {% endblock %}
