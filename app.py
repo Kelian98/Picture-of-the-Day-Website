@@ -9,17 +9,37 @@ from time import strftime
 import os
 import json
 
+from flask_sqlalchemy import SQLAlchemy
+
 # App config.
 DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d443f27567d441f2b6176a'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///upod.db'
+db = SQLAlchemy(app)
 
 # Image upload config
 UPLOAD_FOLDER = 'C:/Users/kelia/Picture-of-the-Day-Website/static/images/upload'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+class Submitted(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_posted = db.Column(db.DateTime, nullable=False,
+                            default=datetime.utcnow)
+    firstname = db.Column(db.String(30), unique=False, nullable=False)
+    lastname = db.Column(db.String(30), unique=False, nullable=False)
+    email = db.Column(db.String(120), unique=False, nullable=False)
+    website = db.Column(db.String(50), unique=False, nullable=False)
+    picture_title = db.Column(db.String(50), nullable=False,
+                              default='default.jpg')
+    description = db.Column(db.String(1000), unique=False, nullable=False)
+
+    def __repr__(self):
+        return f"Post('{self.date_posted}', '{self.firstname}', '{self.lastname}', '{self.picture_title}')"
 
 
 class PhotoForm(FlaskForm):
@@ -57,19 +77,11 @@ def submit():
             now = datetime.now()
             dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
-            data_dict = {
-                'date': dt_string,
-                'firstname': firstname,
-                'lastname': lastname,
-                'email': email,
-                'website': website,
-                'picture_title': picture_title,
-                'description': description,
-                'filename': filename
-            }
+            submitted = Submitted(firstname=firstname, lastname=lastname, email=email,
+                                  website=website, picture_title=picture_title, description=description)
 
-            with open('data.json', 'a') as jsonfile:
-                json.dump(data_dict, jsonfile)
+            db.session.add(submitted)
+            db.session.commit()
 
             flash('Your picture has been sent successfully!', 'success')
             return redirect(url_for('submit'))
