@@ -20,7 +20,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///upod.db'
 db = SQLAlchemy(app)
 
 # Image upload config
-UPLOAD_FOLDER = 'C:/Users/kelia/Picture-of-the-Day-Website/static/images/upload'
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = ROOT_DIR + '/static/images/upload'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -55,6 +56,29 @@ class PhotoForm(FlaskForm):
         ['jpg', 'png', 'jpeg', 'tiff'], 'Images only!')])
     submit = SubmitField('Send your picture')
 
+    def handle_submit(self, request):
+        form = self
+
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        email = request.form['email']
+        website = request.form['website']
+        picture_title = request.form['picture_title']
+        description = request.form['description']
+
+        f = form.photo.data
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(UPLOAD_FOLDER, filename))
+
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+        submitted = Submitted(firstname=firstname, lastname=lastname, email=email,
+                              website=website, picture_title=picture_title, description=description)
+
+        db.session.add(submitted)
+        db.session.commit()
+
 
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
@@ -62,29 +86,12 @@ def submit():
     if request.method == 'POST':
 
         if form.validate_on_submit():
-
-            firstname = request.form['firstname']
-            lastname = request.form['lastname']
-            email = request.form['email']
-            website = request.form['website']
-            picture_title = request.form['picture_title']
-            description = request.form['description']
-
-            f = form.photo.data
-            filename = secure_filename(f.filename)
-            f.save(os.path.join(UPLOAD_FOLDER, filename))
-
-            now = datetime.now()
-            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-
-            submitted = Submitted(firstname=firstname, lastname=lastname, email=email,
-                                  website=website, picture_title=picture_title, description=description)
-
-            db.session.add(submitted)
-            db.session.commit()
-
-            flash('Your picture has been sent successfully!', 'success')
-            return redirect(url_for('submit'))
+            try:
+                form.handle_submit(request)
+                flash('Your picture has been sent successfully!', 'success')
+                return redirect(url_for('submit'))
+            except:
+                flash('An internal error occured. Sorry...', 'danger')
         else:
             flash(
                 'Invalid format file. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
