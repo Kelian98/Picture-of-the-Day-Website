@@ -4,8 +4,9 @@ from datetime import date, datetime
 from time import strftime
 import os
 import json
+from random import random
 
-from database import Database
+from database import Database, db_session
 
 from forms import PhotoForm
 from models import Submitted
@@ -19,7 +20,8 @@ app.config['SECRET_KEY'] = '7d441f27d443f27567d441f2b6176a'
 
 
 # Database config
-from database import db_session
+from database import init_db
+init_db()
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -28,7 +30,8 @@ def shutdown_session(exception=None):
 
 # Image upload config
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = ROOT_DIR + '/static/images/upload'
+UPLOAD_URL = '/images/upload'
+UPLOAD_FOLDER = ROOT_DIR + '/static' + UPLOAD_URL
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -60,8 +63,30 @@ def submit():
 @app.route("/")
 def home():
     today = date.today()
-    d2 = today.strftime("%B %d, %Y")
-    return render_template('home.html', d2=d2)
+    date_today = today.strftime("%B %d, %Y")
+
+    picture = Submitted.query.filter(Submitted.published == today).first()
+
+    # if not picture
+    if(picture == None):
+        # fetch all pictures
+        picture_set = Submitted.query.all()
+
+        # if new picture exists
+        if(len(picture_set) > 0):
+            # take a random picture
+            index_max = len(picture_set) - 1
+            random_index = int(random()*index_max)
+            picture = picture_set[random_index]
+            # commit the picture
+            picture.published = today
+            db_session.add(picture)
+            db_session.commit()
+        else:
+            picture = Submitted.query.first()
+
+
+    return render_template('home.html', date_today=date_today, picture=picture)
 
 
 if __name__ == "__main__":

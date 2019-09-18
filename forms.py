@@ -40,11 +40,10 @@ class PhotoForm(FlaskForm):
         filename = secure_filename(f.filename)
         f.save(path.join(UPLOAD_FOLDER, filename))
 
-        now = datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        picture = filename
 
         submitted = Submitted(firstname=firstname, lastname=lastname, email=email,
-                              website=website, picture_title=picture_title, description=description)
+                              website=website, picture_title=picture_title, description=description, picture=picture)
 
         db_session.add(submitted)
         db_session.commit()

@@ -13,36 +13,29 @@
 
     <div class="row pt-1 mb-2">
         <div class="col">
-            <h5 style="text-align: center;">{{ d2 }}</h5>
+          <h5 style="text-align: center;">{{ date_today }}</h5>
         </div>
     </div>
 </div>
 
 
 <div class="container mb-4">
-    <img src="{{ url_for('static', filename='images/featured.jpg') }}" class="img-fluid" alt="Responsive image" />
+    <img src="{{ url_for('static', filename='images/upload/' + picture.picture) }}" class="img-fluid" alt="Responsive image" />
 </div>
 
 <div class="container text-light">
     <div class="row">
         <div class="col">
-            <h4 class="font-weight-bold" style="text-align: center;">The New York City Skyline</h4>
+            <h4 class="font-weight-bold" style="text-align: center;">{{ picture.picture_title }}</h4>
             <h5 style="text-align: center;">
-                Image Credit & Copyright: <a href="#">John Doe</a>
+                Image Credit & Copyright: <a href="{{ picture.website }}">{{ picture.firstname }} {{ picture.lastname }}</a>
             </h5>
         </div>
     </div>
     <div class="row">
         <div class="col">
             <p class="lead pt-1" style="text-align: justify; font-size: 1.2em;">
-                Morbi semper neque bibendum metus tincidunt, in cursus neque semper.
-                Aenean tincidunt urna tristique lectus semper, non interdum dolor
-                aliquam. Ut suscipit interdum porta. Nam euismod sapien ut magna
-                placerat suscipit ac vel ipsum. Vestibulum neque est, ultricies
-                vitae arcu quis, vestibulum varius turpis. Nam rhoncus sed leo non
-                interdum. Praesent feugiat ante libero, nec ultricies risus
-                porttitor ut. Praesent vel orci sem. Pellentesque tortor sem,
-                hendrerit vitae nisi consectetur, accumsan vehicula mauris.
+                {{ picture.description }}
             </p>
         </div>
     </div>
