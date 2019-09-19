@@ -1,85 +1,40 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
-from werkzeug.utils import secure_filename
-
-from flask_sqlalchemy import SQLAlchemy
-
-from flask_wtf.file import FileField, FileRequired, FileAllowed
-from flask_wtf import FlaskForm
-from wtforms import TextField, TextAreaField, validators, StringField, SubmitField
-from wtforms.validators import DataRequired
 
 from datetime import date, datetime
 from time import strftime
 import os
 import json
+from random import random
+
+from database import Database, db_session
+
+from forms import PhotoForm
+from models import Submitted
+
 
 # App config.
 DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d443f27567d441f2b6176a'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///upod.db'
-db = SQLAlchemy(app)
+
+
+# Database config
+from database import init_db
+init_db()
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
+
 
 # Image upload config
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = ROOT_DIR + '/static/images/upload'
+UPLOAD_URL = '/images/upload'
+UPLOAD_FOLDER = ROOT_DIR + '/static' + UPLOAD_URL
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-class Submitted(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date_posted = db.Column(db.DateTime, nullable=False,
-                            default=datetime.utcnow)
-    firstname = db.Column(db.String(30), unique=False, nullable=False)
-    lastname = db.Column(db.String(30), unique=False, nullable=False)
-    email = db.Column(db.String(120), unique=False, nullable=False)
-    website = db.Column(db.String(50), unique=False, nullable=False)
-    picture_title = db.Column(db.String(50), nullable=False,
-                              default='default.jpg')
-    description = db.Column(db.String(1000), unique=False, nullable=False)
-
-    def __repr__(self):
-        return f"Post('{self.date_posted}', '{self.firstname}', '{self.lastname}', '{self.picture_title}')"
-
-
-class PhotoForm(FlaskForm):
-    firstname = TextField('Firstname', validators=[DataRequired()])
-    lastname = TextField('Lastname', validators=[DataRequired()])
-    email = TextField('Email', validators=[DataRequired()])
-    website = TextField('Website', validators=[DataRequired()])
-    picture_title = TextField('Picture title', validators=[
-                              DataRequired()])
-    description = TextAreaField('Description and data', validators=[
-                                DataRequired()])
-    photo = FileField('image', validators=[FileRequired(), FileAllowed(
-        ['jpg', 'png', 'jpeg', 'tiff'], 'Images only!')])
-    submit = SubmitField('Send your picture')
-
-    def handle_submit(self, request):
-        form = self
-
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        email = request.form['email']
-        website = request.form['website']
-        picture_title = request.form['picture_title']
-        description = request.form['description']
-
-        f = form.photo.data
-        filename = secure_filename(f.filename)
-        f.save(os.path.join(UPLOAD_FOLDER, filename))
-
-        now = datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-
-        submitted = Submitted(firstname=firstname, lastname=lastname, email=email,
-                              website=website, picture_title=picture_title, description=description)
-
-        db.session.add(submitted)
-        db.session.commit()
 
 
 @app.route('/submit', methods=['GET', 'POST'])
@@ -93,10 +48,14 @@ def submit():
                 flash('Your picture has been sent successfully!', 'success')
                 return redirect(url_for('submit'))
             except:
-                flash('An internal error occured. Sorry...', 'danger')
+                flash_message = 'An internal error occured. Sorry...'
+                if(DEBUG):
+                    import sys
+                    e = sys.exc_info()
+                    flash_message += ' DEBUG : (' + str(e[1]) + ')'
+                flash( flash_message, 'danger')
         else:
-            flash(
-                'Invalid format file. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
+            flash('Invalid format file. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
 
     return render_template('submit.html', form=form)
 
@@ -104,8 +63,30 @@ def submit():
 @app.route("/")
 def home():
     today = date.today()
-    d2 = today.strftime("%B %d, %Y")
-    return render_template('home.html', d2=d2)
+    date_today = today.strftime("%B %d, %Y")
+
+    picture = Submitted.query.filter(Submitted.published == today).first()
+
+    # if not picture
+    if(picture == None):
+        # fetch all pictures
+        picture_set = Submitted.query.all()
+
+        # if new picture exists
+        if(len(picture_set) > 0):
+            # take a random picture
+            index_max = len(picture_set) - 1
+            random_index = int(random()*index_max)
+            picture = picture_set[random_index]
+            # commit the picture
+            picture.published = today
+            db_session.add(picture)
+            db_session.commit()
+        else:
+            picture = Submitted.query.first()
+
+
+    return render_template('home.html', date_today=date_today, picture=picture)
 
 
 if __name__ == "__main__":
