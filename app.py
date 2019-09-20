@@ -1,3 +1,4 @@
+from database import init_db
 from flask import Flask, render_template, url_for, request, redirect, flash
 
 from datetime import date, datetime
@@ -20,8 +21,8 @@ app.config['SECRET_KEY'] = '7d441f27d443f27567d441f2b6176a'
 
 
 # Database config
-from database import init_db
 init_db()
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -53,9 +54,10 @@ def submit():
                     import sys
                     e = sys.exc_info()
                     flash_message += ' DEBUG : (' + str(e[1]) + ')'
-                flash( flash_message, 'danger')
+                flash(flash_message, 'danger')
         else:
-            flash('Invalid format file. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
+            flash(
+                'Invalid format file. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
 
     return render_template('submit.html', form=form)
 
@@ -84,7 +86,6 @@ def home():
             db_session.commit()
         else:
             picture = Submitted.query.first()
-
 
     return render_template('home.html', date_today=date_today, picture=picture)
 

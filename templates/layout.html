@@ -51,8 +51,10 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
-    <div class="alert alert-{{ category }}" role="alert">
-        {{ message }}
+    <div class="container" style="width: 40%;">
+        <div class="alert alert-{{ category }}" role="alert">
+            {{ message }}
+        </div>
     </div>
     {% endfor %}
     {% endif %}
@@ -65,7 +67,8 @@
         <p style="color: #646464;">
             &copy; Copyright 2019-2020<br />
             All Rights Reserved by
-            <a href="https://github.com/Kelian98"> Kelian98</a>
+            <a href="https://github.com/Kelian98"> Kelian98 </a>&
+            <a href="https://github.com/GoswaTech"> Goswa</a>
         </p>
     </footer>
     {% endblock %}
