@@ -57,7 +57,7 @@ def submit():
                 flash(flash_message, 'danger')
         else:
             flash(
-                'Invalid format file. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
+                'Invalid form. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
 
     return render_template('submit.html', form=form)
 
@@ -83,8 +83,7 @@ def home():
             picture = picture_set[random_index]
             # commit the picture
             picture.published = today
-            db_session.add(picture)
-            db_session.commit()
+            picture.save()
         else:
             picture = Submitted.query.first()
 
