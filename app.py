@@ -55,6 +55,30 @@ def submit():
                     e = sys.exc_info()
                     flash_message += ' DEBUG : (' + str(e[1]) + ')'
                 flash(flash_message, 'danger')
+
+        elif request.form['firstname'] == '':
+            flash(
+                'You must enter your first name.', 'danger')
+
+        elif request.form['lastname'] == '':
+            flash(
+                'You must enter your last name.', 'danger')
+
+        elif request.form['email'] == '':
+            flash(
+                'You must enter your email.', 'danger')
+
+        elif request.form['website'] == '':
+            flash(
+                'You must enter your website or personal page.', 'danger')
+
+        elif request.form['picture_title'] == '':
+            flash(
+                'You must enter your picture title.', 'danger')
+
+        elif request.form['description'] == '':
+            flash(
+                'You must enter a description.', 'danger')
         else:
             flash(
                 'Invalid form. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
