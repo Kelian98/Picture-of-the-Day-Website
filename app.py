@@ -57,7 +57,7 @@ def submit():
                 flash(flash_message, 'danger')
         else:
             flash(
-                'Invalid format file. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
+                'Invalid form. Only jpg, jpeg, png and tiff files are allowed !', 'danger')
 
     return render_template('submit.html', form=form)
 
@@ -67,12 +67,13 @@ def home():
     today = date.today()
     date_today = today.strftime("%B %d, %Y")
 
+    from datetime import timedelta
     picture = Submitted.query.filter(Submitted.published == today).first()
 
     # if not picture
     if(picture == None):
         # fetch all pictures
-        picture_set = Submitted.query.all()
+        picture_set = Submitted.query.filter(Submitted.published == None).all()
 
         # if new picture exists
         if(len(picture_set) > 0):
@@ -82,8 +83,7 @@ def home():
             picture = picture_set[random_index]
             # commit the picture
             picture.published = today
-            db_session.add(picture)
-            db_session.commit()
+            picture.save()
         else:
             picture = Submitted.query.first()
 
