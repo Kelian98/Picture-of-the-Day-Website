@@ -67,12 +67,13 @@ def home():
     today = date.today()
     date_today = today.strftime("%B %d, %Y")
 
+    from datetime import timedelta
     picture = Submitted.query.filter(Submitted.published == today).first()
 
     # if not picture
     if(picture == None):
         # fetch all pictures
-        picture_set = Submitted.query.all()
+        picture_set = Submitted.query.filter(Submitted.published == None).all()
 
         # if new picture exists
         if(len(picture_set) > 0):

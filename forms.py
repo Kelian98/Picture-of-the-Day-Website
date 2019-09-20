@@ -18,14 +18,13 @@ class PhotoForm(FlaskForm):
     description = TextAreaField('Description and data', validators=[
                                 DataRequired()])
     photo = FileField('image', validators=[FileRequired(), FileAllowed(
-        ['jpg', 'png', 'jpeg', 'tiff'], 'Images only!')])
+        Submitted.IMAGE_ALLOWED, 'Images only!')])
     submit = SubmitField('Send your picture')
 
     def handle_submit(self, request):
         from os import path
         from app import UPLOAD_FOLDER
         from werkzeug.utils import secure_filename
-        from database import db_session
 
         form = self
 
@@ -45,5 +44,4 @@ class PhotoForm(FlaskForm):
         submitted = Submitted(firstname=firstname, lastname=lastname, email=email,
                               website=website, picture_title=picture_title, description=description, picture=picture)
 
-        db_session.add(submitted)
-        db_session.commit()
+        submitted.save()

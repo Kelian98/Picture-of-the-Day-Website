@@ -3,7 +3,15 @@ from database import Database as Base
 
 from datetime import datetime
 
-class Submitted(Base):
+class Model():
+
+    def save(self):
+        from database import db_session
+
+        db_session.add(self)
+        db_session.commit()
+
+class Submitted(Base, Model):
     __tablename__ = 'submitted'
     id = Column(Integer, primary_key=True)
     date_posted = Column(DateTime, nullable=False,
@@ -17,6 +25,8 @@ class Submitted(Base):
     description = Column(String(1000), unique=False, nullable=False)
     picture = Column(String(1000), unique=True, nullable=False)
     published = Column(Date, nullable=True, default=None)
+
+    IMAGE_ALLOWED = ['jpg', 'png', 'jpeg', 'tiff']
 
     def __repr__(self):
         return f"Post('{self.date_posted}', '{self.firstname}', '{self.lastname}', '{self.picture_title}')"
